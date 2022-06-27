@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h3>{{ club.name }}</h3>
+</div>
+<div>
+{% if club.logo %}
+    <img src="{{club.logo.url}}" alt="" width="150px" height="150px">
+{% endif %}
+</div>
+<div>
+<p>인원수: {{ club.number }} 명</p>
+</div>
+<div>
+<p>동아리 소개: {{ club.introduction }}</p>
+</div>
+
+{% for comment in club.comment_set.all %}
+<div style="display:flex; justify-content:space-between;">
+    {{ comment.date }}
+    {{ comment }}
+    {% if request.user == comment.author %} 
+        <a href="{% url 'comment_delete' club.id comment.id %}">삭제</a>
+    {% endif %}
+</div>
+{% endfor %}
+
+{% if user.is_authenticated %}
+<form method="POST" action="{% url 'comment' club.id %}" id="'comment_create">
+    {% csrf_token %}
+    {{ comment_form }}
+    <input type="submit" value="댓글작성">
+</form>
+{% endif %}
+
+{% if request.user == club.author %} 
+<div style="display:flex; justify-content:flex-end; margin-top:10px;">
+    <button><a href="{% url 'index' %}">목록</a></button>
+    <button><a href="{% url 'update' club.id %}">수정</a></button>
+    <button><a href="{% url 'delete' club.id %}">삭제</a></button>
+</div>
+{% endif %}
+{% endblock %}

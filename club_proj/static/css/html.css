@@ -1,0 +1,6 @@
+.login-container {
+    margin-left: 10%;
+    width: 27%;
+    display: flex;
+    justify-content: space-between;
+}
